@@ -40,7 +40,12 @@ const ProjectFlipbook = ({ images, perPage = 3, ariaLabel }: FlipbookProps) => {
         mobileScrollSupport={true}
         clickEventForward={true}
         aria-label={ariaLabel}
-        // style={{}}
+        style={{}} // ใส่เป็น Object ว่าง
+        startZIndex={0}
+        useMouseEvents={true}
+        swipeDistance={30}
+        showPageCorners={true}
+        disableFlipByClick={false}
       >
         {pages.map((pageImages, pageIndex) => (
           <div
