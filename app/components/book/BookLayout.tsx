@@ -183,7 +183,7 @@ const BookLayout: React.FC = () => {
         return (
           <BookPage title="Projects in My Portfolio" subtitle="Chapter 3: Showcase">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20 scroll-smooth">
-              <ProjectCard title="Project China – ข่าว & วิดีโอ" period="2025 · Internship @ DevX" role="Backend & Mobile Integration" description="แพลตฟอร์มคอนเทนต์รองรับแอปพลิเคชัน Flutter พร้อมระบบเก็บสถิติ Real-time." tech={["Flutter", "Node.js", "Prisma"]} href="/projects/app_jrn_group" />
+              <ProjectCard title="App JRN Group – ข่าว & วิดีโอ" period="2025 · Internship @ DevX" role="Backend & Mobile Integration" description="แพลตฟอร์มคอนเทนต์รองรับแอปพลิเคชัน Flutter พร้อมระบบเก็บสถิติ Real-time." tech={["Flutter", "Node.js", "Prisma"]} href="/projects/app_jrn_group" />
               <ProjectCard title="Project Gaysorn" period="2025 · Internship @ DevX" role="Frontend Developer" description="ระบบจัดการงานแจ้งซ่อมดิจิทัลเพื่อเพิ่มประสิทธิภาพองค์กร." tech={["React", "Tailwind CSS"]} href="/projects/gaysorn" />
               <ProjectCard title="CS360 Cloud Computing" period="2024 · Class Project" role="Dev-Ops Cloud Engineer" description="Automated CI/CD pipeline 100% บน AWS EC2 ด้วย Shell Script." tech={["AWS", "Docker", "ShellScript"]} href="/projects/cs360" />
               <ProjectCard title="DormHub – ระบบจองหอพัก" period="2025 · University Project" role="Full-stack Developer" description="ระบบจองหอพักพร้อมแดชบอร์ดแอดมินและสถานะห้อง Real-time." tech={["Next.js", "Prisma"]} href="/projects/dormhub" />

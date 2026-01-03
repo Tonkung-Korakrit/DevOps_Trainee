@@ -1,0 +1,58 @@
+# version: '3.8'
+
+services:
+  web-portfolio:
+    build:
+       context: .
+       dockerfile: Dockerfile
+    # image: my-portfolio-lean:latest
+    image: my-portfolio:v2-lean
+    container_name: my-web-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - database
+    restart: always
+
+  database:
+    image: mongo:latest
+    container_name: my-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+  mongo-common-ui:
+    image: mongo-express:latest
+    container_name: my-mongo-gui
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=${DB_USER}
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=${DB_PASSWORD}
+      - ME_CONFIG_MONGODB_URL=mongodb://${DB_USER}:${DB_PASSWORD}@database:27017/?authSource=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=${AUTH_USER}
+      - ME_CONFIG_BASICAUTH_PASSWORD=${AUTH_PASS}
+    depends_on:
+      - database
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: docker-dashboard
+    ports:
+      - "9443:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+volumes:
+  mongo-data:
+  portainer_data:
