@@ -38,9 +38,10 @@ jobs:
       - name: Discord Notification
         if: always()
         env:
-          MSG: "** GitHub Actions Update **\nProject: my-portfolio\nStatus: ${{ job.status }}\nBranch: ${{ github.ref_name }}"
+          MSG: "**GitHub Actions Update** **Project:** my-portfolio **Status:** ${{ job.status }} **Branch:** ${{ github.ref_name }} **Check it out here:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run.id }}"
         run: |
+          JSON_PAYLOAD=$(jq -n --arg msg "$MSG" '{content: $msg}')
           curl --fail -i -H "Content-Type: application/json" \
                -X POST \
-               -d "{\"content\": \"$MSG\"}" \
+               -d "$JSON_PAYLOAD" \
                "${{ secrets.DISCORD_WEBHOOK }}"
