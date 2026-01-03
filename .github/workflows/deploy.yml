@@ -26,12 +26,21 @@ jobs:
           # tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
           tags: ${{ secrets.DOCKER_USERNAME }}/my-portfolio:latest
 
+      - name: Debug Secret Check
+        run: |
+          if [ -z "${{ secrets.DISCORD_WEBHOOK }}" ]; then
+            echo " ERROR: DISCORD_WEBHOOK is empty! Check your Repo Secrets."
+            exit 1
+          else
+            echo "DISCORD_WEBHOOK is set."
+          fi
+
       - name: Discord Notification
         if: always()
         env:
           MSG: "** GitHub Actions Update **\nProject: my-portfolio\nStatus: ${{ job.status }}\nBranch: ${{ github.ref_name }}"
         run: |
-          curl -H "Content-Type: application/json" \
+          curl --fail -i -H "Content-Type: application/json" \
                -X POST \
                -d "{\"content\": \"$MSG\"}" \
                "${{ secrets.DISCORD_WEBHOOK }}"
