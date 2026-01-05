@@ -50,3 +50,7 @@ next-env.d.ts
 # Sensitive files
 *.pem
 ton-aws-key*
+
+# AWS CLI Installers
+aws/
+awscliv2.zip
