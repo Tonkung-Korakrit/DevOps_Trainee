@@ -6,6 +6,7 @@ on:
       paths: [ "my-aws-projects/eks-cluster/**" ]
   pull_request:
       branches: [ "main" ]
+      paths: [ "my-aws-projects/eks-cluster/**" ]
 
 jobs:
   terraform:
