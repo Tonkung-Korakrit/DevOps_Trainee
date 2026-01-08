@@ -94,9 +94,10 @@ jobs:
         run: aws eks update-kubeconfig --name tonkung-eks-cluster-v2 --region ap-southeast-1
 
       - name: Deploy to EKS
+        working-directory: ./my-aws-projects/eks-cluster/k8s
         run: |
-          kubectl apply -f eks-cluster/k8s/deploy.yaml
-          kubectl apply -f eks-cluster/k8s/service.yaml
+          kubectl apply -f deploy.yaml
+          kubectl apply -f service.yaml
           kubectl rollout restart deployment portfolio-deployment
 
       - name: Debug Secret Check
