@@ -36,3 +36,17 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
         working-directory: ./my-aws-projects/eks-cluster
+
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "**Report status Infrastructure**"
+          title: "Terraform Automation Status"
+          description: |
+            **Action:** ${{ github.event_name }} [cite: 2026-01-08]
+            **Result:** ${{ job.status == 'success' && 'Infrastructure is ready! ✅' || 'Infrastructure failed! ❌' }}
+            **Cllister Name:** tonkung-eks-cluster-v2 [cite: 2026-01-08]
+          color: ${{ job.status == 'success' && '0x00f00' || '0xff0000' }}

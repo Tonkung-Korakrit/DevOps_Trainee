@@ -1,0 +1,58 @@
+name: "Force Destroy Infrastructure"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup-and-destory:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "ap-southeast-1"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update Kubeconfig
+        run: aws eks update-kubeconfig --name tonkung-eks-cluster-v2 --region ${{ env.AWS_REGION }}
+
+      - name: Cleanup Kubernetes Resources
+        run: |
+          echo "Deleting services and deployments to clear the load balancer..."
+          kubectl delete service --all --all-namespaces --timeout=5m || true
+          kubectl delete deployment --all --all-namespaces --timeout=5m || true
+          echo "Please wait 1 minute for AWS to clear the network interface..."
+          sleep 60
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./my-aws-projects/eks-cluster
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: ./my-aws-projects/eks-cluster
+
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "The Destroy operation is complete"
+          title: "Infrastructure Destruction Status"
+          description: |
+            **Status:** ${{ job.status == 'success' && 'Destroy is complete' || 'Destroy is failed. Please check the AWS console'
+            **Result:** Resources have been destroyed to maintain credibility.
+          color: ${{ job.status == 'success' && '0xffa500' || '0xff0000' }}

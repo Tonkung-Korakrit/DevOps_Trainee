@@ -16,5 +16,19 @@ spec:
       - name: portfolio-container
         #image: nginx:latest
         image: tonkung456/my-portfolio:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
