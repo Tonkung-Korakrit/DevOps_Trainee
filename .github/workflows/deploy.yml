@@ -109,13 +109,46 @@ jobs:
             echo "DISCORD_WEBHOOK is set."
           fi
 
-      - name: Discord Notification
+      #- name: Discord Notification
+      #  uses: sarisia/actions-status-discord@v1
+      #  if: always()
+      #  with:
+      #    webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      #    status: ${{ job.status }}
+      #    contant: "The system is reporting the deployment results."
+      #    title: "Deployment Status"
+      #    description: "***Project:*** Portfolio Next.js\n***Branch:*** ${{ github.ref_name }}\n***Status:*** ${{ job.status }}"
+      #    color: ${{ job.status == 'success' && '0x00ff00' || '0xff0000' }}
+
+      - name: Get LoadBalancer URL
+        id: get_url
+        run: |
+          sleep 30
+          URL=$(kubectl get svc portfolio-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "APP_URL=http://$URL" >> $GITHUB_ENV
+          echo "The app address has been found: $URL"
+
+      - name: Discord Notification (Success)
         uses: sarisia/actions-status-discord@v1
-        if: always()
+        if: success()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          contant: "The system is reporting the deployment results."
-          title: "Deployment Status"
-          description: "***Project:*** Portfolio Next.js\n***Branch:*** ${{ github.ref_name }}\n***Status:*** ${{ job.status }}"
-          color: ${{ job.status == 'success' && '0x00ff00' || '0xff0000' }}
+          contant: "The Deployment process is complete"
+          title: "Cluster is Ready & App is Live"
+          description: |
+            **Project:** Portfolio Next.js
+            **Status:** Online 🟢
+            **Access URL:** ${{ env.APP_URL }}
+          color: "0x00ff00"
+
+      - name: Discord Notification (Failure)
+        uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          content: "⚠️ Something went wrong during deployment."
+          title: "Deployment Failed!"
+          description: "Please check the logs in GitHub Actions immediately!"
+          color: "0xff0000"
