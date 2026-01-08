@@ -3,7 +3,7 @@ name: "Terraform Automation"
 on:
   push:
       branches: [ "main" ]
-      paths: [ "eks-cluster/**" ]
+      paths: [ "my-aws-projects/eks-cluster/**" ]
   pull_request:
       branches: [ "main" ]
 
