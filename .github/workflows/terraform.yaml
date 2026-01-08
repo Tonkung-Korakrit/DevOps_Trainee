@@ -1,0 +1,37 @@
+name: "Terraform Automation"
+
+on:
+  push:
+      branches: [ "main" ]
+      paths: [ "eks-cluster/**" ]
+  pull_request:
+      branches: [ "main" ]
+
+jobs:
+  terraform:
+    name: "Terraform Plan & Apply"
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: "ap-southeast-1"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terrform@v2
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./eks-cluster
+
+      - name: Terraform Plan
+        run: terraform plan
+        working-directory: ./eks-cluster
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terrform apply -auto-approve
+        working-directory: ./eks-cluster
