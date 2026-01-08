@@ -9,7 +9,7 @@ on:
     paths-ignore:
       - 'my-aws-projects/eks-cluster/**'
   workflow_run:
-    workflows: ["Terraform Automation" ]
+    workflows: [ "Terraform Automation" ]
     types: [completed]
 
 jobs:
