@@ -6,8 +6,10 @@ on:
     paths:
       - 'app/**'
       - '.github/workflows/deploy.yml'
+    paths-ignore:
+      - 'my-aws-projects/eks-cluster/**'
   workflow_run:
-    workflows: [" Terraform Automation" ]
+    workflows: ["Terraform Automation" ]
     types: [completed]
 
 jobs:

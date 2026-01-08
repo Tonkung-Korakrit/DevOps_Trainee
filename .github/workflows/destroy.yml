@@ -53,6 +53,6 @@ jobs:
           content: "The Destroy operation is complete"
           title: "Infrastructure Destruction Status"
           description: |
-            **Status:** ${{ job.status == 'success' && 'Destroy is complete' || 'Destroy is failed. Please check the AWS console'
+            **Status:** ${{ job.status == 'success' && 'Destroy is complete' || 'Destroy is failed. Please check the AWS console' }}
             **Result:** Resources have been destroyed to maintain credibility.
           color: ${{ job.status == 'success' && '0xffa500' || '0xff0000' }}
