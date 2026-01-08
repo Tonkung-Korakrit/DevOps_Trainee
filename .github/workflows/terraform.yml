@@ -18,20 +18,20 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terrform@v2
+        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./eks-cluster
+        working-directory: ./my-aws-projects/eks-cluster
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./eks-cluster
+        working-directory: ./my-aws-projects/eks-cluster
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terrform apply -auto-approve
-        working-directory: ./eks-cluster
+        run: terraform apply -auto-approve
+        working-directory: ./my-aws-projects/eks-cluster
